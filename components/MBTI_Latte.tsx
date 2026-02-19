@@ -728,10 +728,6 @@ const MBTI_Latte: React.FC = () => {
       </div>
     </section>
   );
-); 
 }; 
-};
-
-export default MBTI_Latte;
 
 export default MBTI_Latte;
