@@ -1,14 +1,20 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, RefreshCw, Zap, Quote, Coffee, ArrowRight, Heart, UserCog, Briefcase, Repeat, Stethoscope, CheckCircle2, Loader2, AlertTriangle, WifiOff, ArrowLeft } from 'lucide-react';
-import { GoogleGenAI, Type } from "@google/genai";
+// 🌟 'Type'을 반드시 추가해야 빈 화면이 안 뜹니다!
+import { GoogleGenAI, Type } from "@google/genai"; 
+import { 
+  Sparkles, Coffee, RefreshCw, Quote, ArrowLeft, ArrowRight, 
+  WifiOff, Loader2, Zap, Heart, Briefcase, UserCog, Stethoscope 
+} from 'lucide-react';
 
+// 🌟 Vercel 환경 변수 연결 (여기가 작업실 밖 '설정실'입니다)
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
 const ai = apiKey ? new GoogleGenAI(apiKey) : null;
 const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
 
-// ... (Existing Interfaces and Data - Keep as is, omitted for brevity)
+const MBTI_Latte: React.FC = () => {
+ 
 interface MBTIProfile {
   nickname: string;
   diagnosis: string;
