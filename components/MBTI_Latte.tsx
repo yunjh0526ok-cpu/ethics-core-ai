@@ -326,10 +326,7 @@ const getSafeFallback = (input: string) => {
         juniorTip: "알맹이(의도)만 챙기고 껍데기(말투)는 버리세요. 그게 멘탈 승리입니다."
      };
 }
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
-  const ai = apiKey ? new GoogleGenAI(apiKey) : null;
-  const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
-
+  
 const MBTI_Latte: React.FC = () => {
   const [selectedMBTI, setSelectedMBTI] = useState<string | null>(null);
   const [quizStep, setQuizStep] = useState(0);
