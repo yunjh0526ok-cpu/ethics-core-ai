@@ -362,7 +362,7 @@ const MBTI_Latte: React.FC = () => {
     setSelectedMBTI(null);
   };
 
-  const handleTranslate = async () => {
+ const handleTranslate = async () => {
     if (!latteInput.trim()) return;
     setIsTranslating(true);
     setTranslatedText(''); 
@@ -380,21 +380,28 @@ const MBTI_Latte: React.FC = () => {
             사용자가 입력한 '꼰대어(잔소리)'를 분석하여 다음 JSON 형식으로 출력하세요.
             **중요: 출력 텍스트에 마크다운 기호(**, ## 등)를 절대 포함하지 마십시오.**
             1. translatedText: 요즘 세대가 듣기 좋게 순화하거나 재치 있는 밈으로 번역. 괄호 안에 숨겨진 본심(애정/걱정)을 유머러스하게 추가.
-            2. managerTip: (필수) 입력된 잔소리 내용과 **직접적으로 연관된** 상사를 위한 구체적인 행동 가이드 (1줄).
-            3. juniorTip: (필수) 이 잔소리를 들었을 때 후배가 대처할 수 있는 **구체적인** 처세술 (1줄).
+            2. managerTip: 입력된 잔소리 내용과 직접적으로 연관된 상사를 위한 구체적인 행동 가이드 (1줄).
+            3. juniorTip: 이 잔소리를 들었을 때 후배가 대처할 수 있는 구체적인 처세술 (1줄).
             Tone: Witty, Insightful, Trendy.
         `;
-        const promptContent = `Translate this Latte speak: "${latteInput}"`;
 
-        const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error("Request timed out")), 8000)
-        );
         const apiPromise = ai.models.generateContent({
-            model: "gemini-3-flash-preview",
-            contents: promptContent,
+            // 🌟 1. 모델명 확인 (Gemini 3 Flash)
+            model: "gemini-3-flash",
+            contents: [{ role: "user", parts: [{ text: `Translate this Latte speak: "${latteInput}"` }] }],
             config: {
                 systemInstruction: systemInstruction,
                 responseMimeType: "application/json",
+                // 🌟 2. 순환(무한반복) 방지 및 창의성 설정
+                temperature: 0.8,
+                topP: 0.95,
+                // 🌟 3. 오프라인(차단) 방지: 안전 설정 해제
+                safetySettings: [
+                    { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
+                ],
                 responseSchema: {
                     type: Type.OBJECT,
                     properties: {
@@ -405,20 +412,25 @@ const MBTI_Latte: React.FC = () => {
                 }
             }
         });
+
+        // 타임아웃은 10초로 조금 넉넉히 잡았습니다.
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Request timed out")), 10000)
+        );
+
         const response = await Promise.race([apiPromise, timeoutPromise]) as any;
         const jsonStr = response.text || "{}";
-        const cleanJsonStr = jsonStr.replace(/```json/g, '').replace(/```/g, '').trim();
-        const json = JSON.parse(cleanJsonStr);
-        setTranslatedText(cleanText(json.translatedText || "번역 실패"));
-        const defaultManager = "질문으로 바꾸면 잔소리가 멘토링이 됩니다.";
-        const defaultJunior = "한 귀로 듣고 한 귀로 흘리는 스킬이 필요합니다.";
+        const json = JSON.parse(jsonStr.replace(/```json/g, '').replace(/```/g, '').trim());
+
+        setTranslatedText(json.translatedText || "번역 실패");
         setActionPlan({ 
-            manager: cleanText(json.managerTip || defaultManager), 
-            junior: cleanText(json.juniorTip || defaultJunior) 
+            manager: json.managerTip || "질문으로 바꾸면 잔소리가 멘토링이 됩니다.", 
+            junior: json.juniorTip || "한 귀로 듣고 한 귀로 흘리는 스킬이 필요합니다." 
         });
 
     } catch (e) {
-        console.warn("Switching to Offline Fallback Mode");
+        console.warn("Switching to Offline Fallback Mode", e);
+        // 🌟 4. API 에러 시에만 오프라인 모드 작동
         const fallback = getSafeFallback(latteInput);
         setTranslatedText(fallback.translatedText);
         setActionPlan({ manager: fallback.managerTip, junior: fallback.juniorTip });
@@ -427,7 +439,6 @@ const MBTI_Latte: React.FC = () => {
         setIsTranslating(false);
     }
   };
-
   const handleBack = () => {
     sessionStorage.setItem('hero_view_mode', 'consulting');
     const event = new CustomEvent('navigate', { detail: 'home' });
