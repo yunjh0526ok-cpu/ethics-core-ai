@@ -11,10 +11,7 @@ import {
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
 const ai = apiKey ? new GoogleGenAI(apiKey) : null;
 const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
-
-
   
-const MBTI_Latte: React.FC = () => {
 interface MBTIProfile {
   nickname: string;
   diagnosis: string;
@@ -30,6 +27,7 @@ interface MBTIProfile {
   consultation: string; 
   color: string;
 }
+
 
 const QUIZ_QUESTIONS = [
   {
@@ -71,8 +69,7 @@ const QUIZ_QUESTIONS = [
 ];
 
 const MBTI_DATA: Record<string, MBTIProfile> = {
-  // ... (Full data as before)
-  // Analysts (NT)
+  
   INTJ: { 
     nickname: "청렴 알파고", 
     diagnosis: "규정의 효율성을 따짐. 비효율적인 청렴 활동은 시간 낭비라 생각해서 안 함 (근데 부정부패는 더 싫어함).", 
@@ -314,7 +311,23 @@ const MBTI_DATA: Record<string, MBTIProfile> = {
     color: "text-red-300" 
   },
 };
+// 1. 모든 데이터(MBTI_DATA)가 끝난 지점입니다.
+// 2. 이제 메인 컴포넌트 함수를 시작합니다.
+const MBTI_Latte: React.FC = () => {
+  // 여기에 아까 사용하시던 useState들을 넣으세요.
+  const [selectedMBTI, setSelectedMBTI] = useState<string | null>(null);
+  const [quizStep, setQuizStep] = useState(0);
+  const [mbtiResultBuffer, setMbtiResultBuffer] = useState<string[]>(['', '', '', '']);
+  const [latteInput, setLatteInput] = useState('');
+  const [translatedText, setTranslatedText] = useState('');
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [usingFallback, setUsingFallback] = useState(false);
+  const [actionPlan, setActionPlan] = useState<{ manager: string; junior: string }>({
+    manager: "가르치려 하지 말고 질문하세요.",
+    junior: "설명하려 하지 말고 요약하세요."
+  });
 
+  // 이후 handleQuizSelect, handleTranslate 등의 함수가 이어집니다...
 const getSafeFallback = (input: string) => {
      if (input.includes('라떼') || input.includes('나 때는') || input.includes('요즘')) {
         return {
@@ -715,6 +728,10 @@ const MBTI_Latte: React.FC = () => {
       </div>
     </section>
   );
+); 
+}; 
 };
+
+export default MBTI_Latte;
 
 export default MBTI_Latte;
