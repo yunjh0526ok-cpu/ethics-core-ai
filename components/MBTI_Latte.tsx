@@ -349,7 +349,7 @@ const MBTI_Latte: React.FC = () => {
     manager: "가르치려 하지 말고 질문하세요. '자네 생각은 어때?'가 '라떼는 말이야'보다 100배 더 힙합니다.",
     junior: "설명하려 하지 말고 요약하세요. '그래서 결론은 이렇습니다'가 구구절절한 변명보다 100배 더 프로답습니다."
   });
-
+  
    const handleQuizSelect = (value: string) => {
     const newBuffer = [...mbtiResultBuffer];
     newBuffer[quizStep] = value;
