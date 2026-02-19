@@ -729,5 +729,6 @@ const MBTI_Latte: React.FC = () => {
     </section>
   );
 }; 
+};
 
 export default MBTI_Latte;
