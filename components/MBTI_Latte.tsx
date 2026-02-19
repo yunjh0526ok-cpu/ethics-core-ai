@@ -1,10 +1,20 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, RefreshCw, Zap, Quote, Coffee, ArrowRight, Heart, UserCog, Briefcase, Repeat, Stethoscope, CheckCircle2, Loader2, AlertTriangle, WifiOff, ArrowLeft } from 'lucide-react';
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai"; // 🌟 Type을 꼭 포함해야 빌드 에러가 안 납니다.
+import { 
+  Sparkles, Coffee, RefreshCw, Quote, ArrowLeft, ArrowRight, 
+  WifiOff, Loader2, Zap, Heart, Briefcase, UserCog, Stethoscope 
+} from 'lucide-react';
 
-// ... (Existing Interfaces and Data - Keep as is, omitted for brevity)
+// 🌟 [핵심] Vercel 금고에서 열쇠를 안전하게 꺼내오는 설정입니다.
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
+const ai = apiKey ? new GoogleGenAI(apiKey) : null;
+const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
+
+
+  
+const MBTI_Latte: React.FC = () => {
 interface MBTIProfile {
   nickname: string;
   diagnosis: string;
@@ -340,9 +350,7 @@ const MBTI_Latte: React.FC = () => {
     junior: "설명하려 하지 말고 요약하세요. '그래서 결론은 이렇습니다'가 구구절절한 변명보다 100배 더 프로답습니다."
   });
 
-  const ai = process.env.API_KEY ? new GoogleGenAI({ apiKey: process.env.API_KEY }) : null;
-  const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
-
+ 
   const handleQuizSelect = (value: string) => {
     const newBuffer = [...mbtiResultBuffer];
     newBuffer[quizStep] = value;
