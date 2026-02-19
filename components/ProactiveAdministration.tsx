@@ -117,6 +117,12 @@ const ai = apiKey ? new GoogleGenAI({ apiKey: apiKey }) : null;
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: text,
+        safetySettings: [
+    { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+    { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+    { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+    { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
+  ],
         config: {
             systemInstruction: `
                 당신은 대한민국 공무원을 위한 **적극행정 AI 전문 상담관 '든든이'**입니다.
