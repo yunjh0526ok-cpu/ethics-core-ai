@@ -1,25 +1,27 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenAI, Type } from "@google/genai"; 
-import { 
-  Sparkles, Coffee, RefreshCw, Quote, ArrowLeft, ArrowRight, 
-  WifiOff, Loader2, Zap, Heart, Briefcase, UserCog, Stethoscope 
-} from 'lucide-react';
-
+import { Sparkles, RefreshCw, Zap, Quote, Coffee, ArrowRight, Heart, UserCog, Briefcase, Repeat, Stethoscope, CheckCircle2, Loader2, AlertTriangle, WifiOff, ArrowLeft } from 'lucide-react';
+import { GoogleGenAI, Type } from "@google/genai";
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
+const ai = apiKey ? new GoogleGenAI(apiKey) : null;
+const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
+// ... (Existing Interfaces and Data - Keep as is, omitted for brevity)
 interface MBTIProfile {
   nickname: string;
   diagnosis: string;
   intention: string;
-  latte: { original: string; translated: string; };
-  tips: { manager: string; junior: string; };
+  latte: {
+    original: string;
+    translated: string;
+  };
+  tips: {
+    manager: string;
+    junior: string;
+  };
   consultation: string; 
   color: string;
 }
-
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
-const ai = apiKey ? new GoogleGenAI(apiKey) : null;
-const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
 
 const QUIZ_QUESTIONS = [
   {
@@ -326,7 +328,7 @@ const getSafeFallback = (input: string) => {
         juniorTip: "알맹이(의도)만 챙기고 껍데기(말투)는 버리세요. 그게 멘탈 승리입니다."
      };
 }
-  
+
 const MBTI_Latte: React.FC = () => {
   const [selectedMBTI, setSelectedMBTI] = useState<string | null>(null);
   const [quizStep, setQuizStep] = useState(0);
