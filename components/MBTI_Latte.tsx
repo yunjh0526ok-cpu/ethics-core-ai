@@ -1,17 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenAI, Type } from "@google/genai"; // 🌟 Type을 꼭 포함해야 빌드 에러가 안 납니다.
-import { 
-  Sparkles, Coffee, RefreshCw, Quote, ArrowLeft, ArrowRight, 
-  WifiOff, Loader2, Zap, Heart, Briefcase, UserCog, Stethoscope 
-} from 'lucide-react';
+import { Sparkles, RefreshCw, Zap, Quote, Coffee, ArrowRight, Heart, UserCog, Briefcase, Repeat, Stethoscope, CheckCircle2, Loader2, AlertTriangle, WifiOff, ArrowLeft } from 'lucide-react';
+import { GoogleGenAI, Type } from "@google/genai";
 
-// 🌟 [핵심] Vercel 금고에서 열쇠를 안전하게 꺼내오는 설정입니다.
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
-const ai = apiKey ? new GoogleGenAI(apiKey) : null;
-const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
-  
+// ... (Existing Interfaces and Data - Keep as is, omitted for brevity)
 interface MBTIProfile {
   nickname: string;
   diagnosis: string;
@@ -717,4 +710,3 @@ const MBTI_Latte: React.FC = () => {
 };
 
 export default MBTI_Latte;
-
