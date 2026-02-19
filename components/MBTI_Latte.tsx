@@ -4,6 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, RefreshCw, Zap, Quote, Coffee, ArrowRight, Heart, UserCog, Briefcase, Repeat, Stethoscope, CheckCircle2, Loader2, AlertTriangle, WifiOff, ArrowLeft } from 'lucide-react';
 import { GoogleGenAI, Type } from "@google/genai";
 
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
+const ai = apiKey ? new GoogleGenAI(apiKey) : null;
+const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
+
 // ... (Existing Interfaces and Data - Keep as is, omitted for brevity)
 interface MBTIProfile {
   nickname: string;
