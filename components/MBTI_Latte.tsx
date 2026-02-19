@@ -6,6 +6,8 @@ import { GoogleGenAI, Type } from "@google/genai";
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
 const ai = apiKey ? new GoogleGenAI(apiKey) : null;
 const cleanText = (text: string) => text.replace(/\*\*/g, '').replace(/##/g, '').replace(/__/g, '');
+
+const MBTI_Latte: React.FC = () => {
 // ... (Existing Interfaces and Data - Keep as is, omitted for brevity)
 interface MBTIProfile {
   nickname: string;
@@ -330,6 +332,7 @@ const getSafeFallback = (input: string) => {
 }
 
 const MBTI_Latte: React.FC = () => {
+  
   const [selectedMBTI, setSelectedMBTI] = useState<string | null>(null);
   const [quizStep, setQuizStep] = useState(0);
   const [mbtiResultBuffer, setMbtiResultBuffer] = useState<string[]>(['', '', '', '']);
